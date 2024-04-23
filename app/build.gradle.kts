@@ -69,10 +69,10 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
-    implementation("com.google.dagger:hilt-android:2.51.1")
-    kapt("androidx.hilt:hilt-compiler:1.2.0")
-    kapt("com.google.dagger:hilt-android-compiler:2.51.1")
+    implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.hilt.android)
+    kapt(libs.androidx.hilt.compiler)
+    kapt(libs.hilt.android.compiler)
 }
 
 // Allow references to generated code

@@ -1,4 +1,4 @@
-package com.example.feasyblue.presentation
+package com.example.feasyblue.presentation.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -12,17 +12,23 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.feasyblue.domain.chat.BluetoothDevice
+import com.example.feasyblue.presentation.BluetoothUiState
+import com.example.feasyblue.ui.theme.FeasyBlueTheme
 
 @Composable
 fun DeviceScreen(
     state: BluetoothUiState,
     onStartScan: () -> Unit,
     onStopScan: () -> Unit,
+    onStartServer: () -> Unit,
+    onDeviceClick: (BluetoothDevice) -> Unit
 ) {
 
     Column(
@@ -31,7 +37,7 @@ fun DeviceScreen(
         BluetoothDeviceList(
             pairedDevices = state.pairedDevices,
             scannedDevices = state.scannedDevices,
-            onClick = {},
+            onClick = onDeviceClick,
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
@@ -45,6 +51,9 @@ fun DeviceScreen(
             }
             Button(onClick = onStopScan) {
                 Text(text = "Stop Scan")
+            }
+            Button(onClick = onStartServer) {
+                Text(text = "Start Server")
             }
         }
     }
@@ -70,13 +79,20 @@ fun BluetoothDeviceList(
             )
         }
         items(pairedDevices) { device ->
-            Text(
-                text = device.name ?: "(No name)",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onClick(device) }
-                    .padding(16.dp)
-            )
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text = device.name ?: "(No name)",
+                    modifier = Modifier
+                        .clickable { onClick(device) }
+                        .padding(16.dp)
+                )
+                Text(
+                    text = device.address,
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .align(Alignment.Start)
+                )
+            }
         }
 
         item {
@@ -88,13 +104,34 @@ fun BluetoothDeviceList(
             )
         }
         items(scannedDevices) { device ->
-            Text(
-                text = device.name ?: "(No name)",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onClick(device) }
-                    .padding(16.dp)
-            )
+            Column( modifier = Modifier.fillMaxWidth() ) {
+                Text(
+                    text = device.name ?: "(No name)",
+                    modifier = Modifier
+                        .clickable { onClick(device) }
+                        .padding(16.dp)
+                )
+                Text(
+                    text = device.address,
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .align(Alignment.Start)
+                )
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun DeviceScreenPreview() {
+    FeasyBlueTheme {
+        DeviceScreen(
+            state = BluetoothUiState(),
+            onStartScan = { /*TODO*/ },
+            onStopScan = { /*TODO*/ },
+            onStartServer = { /*TODO*/ }) {
+
         }
     }
 }
