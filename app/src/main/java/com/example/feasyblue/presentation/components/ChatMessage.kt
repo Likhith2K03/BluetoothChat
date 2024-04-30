@@ -44,13 +44,13 @@ fun ChatMessage(
             color = Color.Black
         )
         Text(
-            text = message.message,
+            text = message.message.contentToString(),
             color = Color.Black,
             modifier = Modifier.widthIn(max = 250.dp)
         )
     }
-
 }
+
 
 @Preview()
 @Composable
@@ -58,9 +58,9 @@ fun ChatMessagePreview() {
     FeasyBlueTheme {
         ChatMessage(
             message = BluetoothMessage(
-                message = "Hello World",
+                message = "Hello, World!".encodeToByteArray(),
                 senderName = "Pixel 6",
-                isFromLocalUser = true
+                isFromLocalUser = false
             )
         )
     }

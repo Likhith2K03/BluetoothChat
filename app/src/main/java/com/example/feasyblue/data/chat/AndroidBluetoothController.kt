@@ -49,7 +49,7 @@ class AndroidBluetoothController(
 
     private var dataTransferService: BluetoothDataTransferService ?= null
 
-    private val _isConnected = MutableStateFlow<Boolean>(false)
+    private val _isConnected = MutableStateFlow(false)
     override val isConnected: StateFlow<Boolean>
         get() = _isConnected.asStateFlow()
 
@@ -141,9 +141,9 @@ class AndroidBluetoothController(
                     null
                 }
                 emit(ConnectionResult.ConnectionEstablished)
-                currentClientSocket?.let {
+                currentClientSocket?.let { bluetoothSocket ->
                     currentServerSocket?.close()
-                    val service = BluetoothDataTransferService(it)
+                    val service = BluetoothDataTransferService(bluetoothSocket)
                     dataTransferService = service
 
                     emitAll(
@@ -178,7 +178,7 @@ class AndroidBluetoothController(
                     socket.connect()
                     emit(ConnectionResult.ConnectionEstablished)
 
-                    BluetoothDataTransferService(socket).also {
+                    BluetoothDataTransferService(socket).also {it ->
                         dataTransferService = it
                         emitAll(
                             it
@@ -206,16 +206,19 @@ class AndroidBluetoothController(
             return null
         }
 
+        val messageBytes = message.encodeToByteArray()
+
         val bluetoothMessage = BluetoothMessage(
-            message = message,
+            message = messageBytes,
             senderName = bluetoothAdapter?.name ?: "Unknown name",
             isFromLocalUser = true
         )
 
-        dataTransferService?.sendMessage(bluetoothMessage.toBteArray())
+        dataTransferService?.sendMessage(bluetoothMessage.toByteArray())
 
         return bluetoothMessage
     }
+
 
     override fun closeConnection() {
         currentClientSocket?.close()
@@ -246,6 +249,6 @@ class AndroidBluetoothController(
     }
 
     companion object {
-        const val SERVICE_UUID = "00001818-0000-1000-8000-00805f9b34fb"
+        const val SERVICE_UUID = "00001101-0000-1000-8000-00805F9B34FB"
     }
 }

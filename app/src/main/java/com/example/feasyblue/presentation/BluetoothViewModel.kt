@@ -121,7 +121,7 @@ class BluetoothViewModel @Inject constructor(
                 }
             }
         }
-            .catch { throwable ->
+            .catch {
                 bluetoothController.closeConnection()
                 _state.update { it.copy(
                     isConnected = false,
